@@ -11,4 +11,4 @@ module swap PrgEnv-nvhpc PrgEnv-gnu || true
 
 mkdir $SANDBOX/bin
 
-cp run.qsub $SANDBOX/bin
+cp $ORIGIN/run.qsub $SANDBOX/bin
