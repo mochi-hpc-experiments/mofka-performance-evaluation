@@ -48,7 +48,6 @@ spack -e experiment install
 
 echo "==> Creating activate.sh script"
 spack env activate --sh experiment > $SANDBOX/bin/activate.sh
-source $SANDBOX/bin/activate.sh
 
 echo "==> Pushing packages to build cache"
 spack -e experiment mirror set --push \
