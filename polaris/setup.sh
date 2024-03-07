@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+MOCHI_BUILDCACHE_TOKEN=$1
+
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 module load cudatoolkit-standalone || true
 
@@ -36,17 +38,23 @@ spack config add config:environments_root:$SANDBOX/environments
 
 echo "==> Creating experiment environment"
 spack env create experiment platform-configurations/ANL/Polaris/spack.yaml
-spack env activate experiment
-spack config add config:install_tree:root:$SANDBOX/
-spack repo add mochi-spack-packages
-spack add mofka+python
-spack add py-mochi-ssg~mpi
+spack -e experiment config add config:install_tree:root:$SANDBOX/
+spack -e experiment repo add mochi-spack-packages
+spack -e experiment add mofka+python
+spack -e experiment add py-mochi-ssg~mpi
 
 echo "==> Installing environment"
-spack install
+spack -e experiment install
 
 echo "==> Creating activate.sh script"
 spack env activate --sh experiment > $SANDBOX/bin/activate.sh
 source $SANDBOX/bin/activate.sh
+
+echo "==> Pushing packages to build cache"
+spack -e experiment mirror set --push \
+         --oci-username mdorier \
+         --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
+spack -e experiment buildcache push --base-image ubuntu:22.04 \
+          --unsigned --update-index mochi-buildcache
 
 echo "==> Setup completed!"
