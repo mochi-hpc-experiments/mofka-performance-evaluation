@@ -39,6 +39,7 @@ spack env activate experiment
 spack config add config:install_tree:root:$SANDBOX/
 spack repo add mochi-spack-packages
 spack add mofka+python
+spack add py-mochi-ssg~mpi
 
 echo "==> Installing environment"
 spack install
