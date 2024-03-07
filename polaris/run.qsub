@@ -1,3 +1,9 @@
 #!/bin/bash
 
-echo "This is from the qsub script"
+SANDBOX=$CI_PROJECT_DI/sandbox
+
+echo "==> Sourcing spack environment"
+source $SANDBOX/bin/activate.sh
+
+echo "==> Showing environment"
+export
