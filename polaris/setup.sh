@@ -48,6 +48,11 @@ spack -e experiment install
 
 echo "==> Cleaning up the environment"
 spack -e experiment gc -y
+find "$SANDBOX" -type d -name "include" -exec rm -rf {} +
+find "$SANDBOX" -type d -name ".spack" -exec rm -rf {} +
+find "$SANDBOX" -type d -name ".spack-db" -exec rm -rf {} +
+find "$SANDBOX" -type d -name "share" -exec rm -rf {} +
+find "$SANDBOX" -type d -name "__pycache__" -exec rm -rf {} +
 
 echo "==> Creating activate.sh script"
 spack env activate --sh experiment > $SANDBOX/bin/activate.sh
