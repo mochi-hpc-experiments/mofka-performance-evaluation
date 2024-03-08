@@ -46,17 +46,6 @@ spack -e experiment add py-mochi-ssg~mpi
 echo "==> Installing environment"
 spack -e experiment install
 
-echo "==> Cleaning up the environment"
-spack -e experiment gc -y
-find "$SANDBOX" -type d -name "include" -exec rm -rf {} +
-find "$SANDBOX" -type d -name ".spack" -exec rm -rf {} +
-find "$SANDBOX" -type d -name ".spack-db" -exec rm -rf {} +
-find "$SANDBOX" -type d -name "share" -exec rm -rf {} +
-find "$SANDBOX" -type d -name "__pycache__" -exec rm -rf {} +
-
-echo "==> Creating activate.sh script"
-spack env activate --sh experiment > $SANDBOX/bin/activate.sh
-
 if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     echo "==> Pushing packages to build cache"
     spack -e experiment mirror set --push \
@@ -65,5 +54,16 @@ if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     spack -e experiment buildcache push --base-image ubuntu:22.04 \
           --unsigned --update-index mochi-buildcache
 fi
+
+echo "==> Creating activate.sh script"
+spack env activate --sh experiment > $SANDBOX/bin/activate.sh
+
+echo "==> Cleaning up the environment"
+spack -e experiment gc -y
+find "$SANDBOX" -type d -name "include" -exec rm -rf {} +
+find "$SANDBOX" -type d -name ".spack" -exec rm -rf {} +
+find "$SANDBOX" -type d -name ".spack-db" -exec rm -rf {} +
+find "$SANDBOX" -type d -name "share" -exec rm -rf {} +
+find "$SANDBOX" -type d -name "__pycache__" -exec rm -rf {} +
 
 echo "==> Setup completed!"
