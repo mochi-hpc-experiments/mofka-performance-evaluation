@@ -18,15 +18,16 @@ RESULT_FILE_NAME=$(basename $RESULT_FILE)
 echo "==> Cloning mofka-performance-evaluation"
 git clone https://github.com/mochi-hpc-experiments/mofka-performance-evaluation.git
 cd mofka-performance-evaluation
+mkdir -p polaris/results
 
 echo "==> Changing branch"
 git checkout results/polaris
 
 echo "==> Copying result file $RESULT_FILE_NAME"
-cp $RESULT_FILE .
+cp $RESULT_FILE polaris/results
 
 echo "==> Creating commit"
-git add $RESULT_FILE_NAME
+git add polaris/results/$RESULT_FILE_NAME
 git commit -m "Added file $RESULT_FILE_NAME"
 
 echo "==> Changing repository URL"
