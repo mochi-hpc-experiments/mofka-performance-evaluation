@@ -1,9 +1,14 @@
 #!/bin/bash
 
-SANDBOX=$CI_PROJECT_DI/sandbox
+SANDBOX=$CI_PROJECT_DIR/sandbox
 
 echo "==> Sourcing spack environment"
 source $SANDBOX/bin/activate.sh
 
 echo "==> Showing environment"
 export
+
+echo "==> Generating example result file"
+mkdir results
+RESULT_FILENAME="$(date +'%Y-%m-%d-%H-%M-%S')-$(uuidgen).json"
+echo "{}" > results/$RESULT_FILENAME
