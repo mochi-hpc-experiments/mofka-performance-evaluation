@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-MOCHI_BUILDCACHE_TOKEN=$1
-
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 module load cudatoolkit-standalone || true
 
