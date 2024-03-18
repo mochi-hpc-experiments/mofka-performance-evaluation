@@ -12,6 +12,7 @@ ORIGIN=$(dirname "$0")
 echo "==> Copying qsub script in sandbox folder"
 mkdir $SANDBOX/bin
 cp $ORIGIN/run.qsub $SANDBOX/bin
+cp $ORIGIN/post.sh $SANDBOX/bin
 
 echo "==> Downloading spack"
 git clone -q https://github.com/spack/spack.git
