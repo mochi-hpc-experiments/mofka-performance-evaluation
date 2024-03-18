@@ -30,7 +30,7 @@ git add $RESULT_FILE_NAME
 git commit -m "Added file $RESULT_FILE_NAME"
 
 echo "==> Changing repository URL"
-git remote set-url "https://$MOCHI_GH_POLARIS@github.com/mochi-hpc-experiments/mofka-performance-evaluation.git"
+git remote set-url origin "https://$MOCHI_GH_POLARIS@github.com/mochi-hpc-experiments/mofka-performance-evaluation.git"
 
 echo "==> Pushing into repository"
 git push
