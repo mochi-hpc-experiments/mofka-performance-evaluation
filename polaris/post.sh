@@ -8,7 +8,7 @@ if [[ -z "$MOCHI_GH_POLARIS" ]]; then
     exit -1
 fi
 
-RESULT_FILE=$(find ../results -type f -name "*.json")
+RESULT_FILE=$(find $CI_PROJECT_DIR/results -type f -name "*.json")
 if [[ -z "$RESULT_FILE" ]]; then
     echo "==> ERROR: Could not locate any result file"
     exit -1
