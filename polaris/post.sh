@@ -2,7 +2,6 @@
 
 SANDBOX=$CI_PROJECT_DIR/sandbox
 
-git add $RESULT_FILE_NAME
 if [[ -z "$MOCHI_GH_POLARIS" ]]; then
     echo "==> ERROR: MOCHI_GH_POLARIS not defined"
     exit -1
