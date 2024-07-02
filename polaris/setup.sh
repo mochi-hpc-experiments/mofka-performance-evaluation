@@ -2,7 +2,6 @@
 set -e
 
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
-module load cudatoolkit-standalone || true
 
 echo "==> Creating sandbox folder"
 mkdir sandbox
