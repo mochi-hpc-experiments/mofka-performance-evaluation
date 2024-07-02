@@ -36,10 +36,11 @@ echo "==> Sourcing setup-env.sh"
 spack config add config:environments_root:$SANDBOX/environments
 
 echo "==> Creating experiment environment"
-spack env create experiment platform-configurations/ANL/Polaris/spack.yaml
+#spack env create experiment platform-configurations/ANL/Polaris/spack.yaml
+spack env create experiment $ORIGIN/spack.yaml
 spack -e experiment config add config:install_tree:root:$SANDBOX/
 spack -e experiment repo add mochi-spack-packages
-spack -e experiment add mofka+python
+spack -e experiment add mofka+python+mpi
 
 echo "==> Installing environment"
 spack -e experiment install
