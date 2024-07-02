@@ -40,7 +40,6 @@ spack env create experiment platform-configurations/ANL/Polaris/spack.yaml
 spack -e experiment config add config:install_tree:root:$SANDBOX/
 spack -e experiment repo add mochi-spack-packages
 spack -e experiment add mofka+python
-spack -e experiment add py-mochi-ssg~mpi
 
 echo "==> Installing environment"
 spack -e experiment install
