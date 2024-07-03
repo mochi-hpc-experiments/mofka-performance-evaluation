@@ -8,10 +8,10 @@ spack:
     prefix_inspections:
       lib: [LD_LIBRARY_PATH]
       lib64: [LD_LIBRARY_PATH]
-#  mirrors:
-#    mochi-buildcache:
-#      url: oci://ghcr.io/mochi-hpc/mochi-spack-buildcache
-#      signed: false
+  mirrors:
+    mochi-buildcache:
+      url: oci://ghcr.io/mochi-hpc/mochi-spack-buildcache
+      signed: false
   config:
     install_tree:
       padded_length: 128
@@ -35,10 +35,10 @@ spack:
       environment: {}
       extra_rpaths: []
   packages:
-#    all:
-#      require:
-#      - "%gcc@12.3"
-#      - "target=zen3"
+    all:
+      require:
+      - "%gcc@12.3"
+      - "target=zen3"
     mochi-ssg:
       require:
       - "~mpi"
