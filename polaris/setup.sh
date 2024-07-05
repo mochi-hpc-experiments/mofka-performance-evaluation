@@ -3,8 +3,6 @@ set -e
 
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 
-echo "==> MOFKA_GITHUB_SHA = ${MOFKA_GITHUB_SHA}"
-
 echo "==> Creating sandbox folder"
 mkdir sandbox
 SANDBOX=$(realpath sandbox)
@@ -41,7 +39,14 @@ echo "==> Creating experiment environment"
 spack env create experiment $ORIGIN/spack.yaml
 spack -e experiment config add config:install_tree:root:$SANDBOX/
 spack -e experiment repo add mochi-spack-packages
-spack -e experiment add mofka+python+mpi
+
+if [[ -n "$MOFKA_GITHUB_SHA" ]]; then
+    echo "==> Adding mofka commit $MOFKA_GITHUB_SHA as main"
+    spack -e experiment add "mofka+python+mpi@git.$MOFKA_GITHUB_SHA=main"
+else
+    echo "==> Adding mofka@main"
+    spack -e experiment add mofka@main+python+mpi
+fi
 
 echo "==> Installing environment"
 spack -e experiment install
@@ -52,7 +57,8 @@ if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
          --oci-username mdorier \
          --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
     spack -e experiment buildcache push --base-image ubuntu:22.04 \
-          --unsigned --update-index mochi-buildcache
+          --unsigned --update-index mochi-buildcache \
+          --only dependencies
 fi
 
 echo "==> Creating activate.sh script"
