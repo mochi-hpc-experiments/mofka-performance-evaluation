@@ -3,6 +3,8 @@ set -e
 
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 
+echo "==> MOFKA_GITHUB_SHA = ${MOFKA_GITHUB_SHA}"
+
 echo "==> Creating sandbox folder"
 mkdir sandbox
 SANDBOX=$(realpath sandbox)
