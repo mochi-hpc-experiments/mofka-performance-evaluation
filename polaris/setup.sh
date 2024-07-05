@@ -57,8 +57,7 @@ if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
          --oci-username mdorier \
          --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
     spack -e experiment buildcache push --base-image ubuntu:22.04 \
-          --unsigned --update-index mochi-buildcache \
-          --only dependencies
+          --unsigned --update-index --only dependencies mochi-buildcache
 fi
 
 echo "==> Creating activate.sh script"
