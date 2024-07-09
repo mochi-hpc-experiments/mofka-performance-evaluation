@@ -56,7 +56,7 @@ if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     spack -e experiment mirror set --push \
          --oci-username mdorier \
          --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
-    spack -e experiment buildcache push --base-image ubuntu:22.04 \
+    spack -d -e experiment buildcache push --base-image ubuntu:22.04 \
           --unsigned --update-index --only dependencies mochi-buildcache
 fi
 
