@@ -51,6 +51,8 @@ fi
 echo "==> Installing environment"
 spack -e experiment install
 
+cat $SANDBOX/environments/experiment/spack.lock
+
 if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     echo "==> Pushing packages to build cache"
     spack -e experiment mirror set --push \
