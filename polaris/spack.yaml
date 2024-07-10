@@ -39,15 +39,18 @@ spack:
       require:
       - "%gcc@12.3"
       - "target=zen3"
-    mochi-ssg:
+    mochi-bedrock:
       require:
-      - "~mpi"
+      - "~ssg"
     mpi:
       require:
       - cray-mpich
     pkgconfig:
       require:
       - pkg-config
+    json-c:
+      require:
+      - "@0.13.0"
     cray-mpich:
       buildable: false
       externals:
