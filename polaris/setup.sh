@@ -42,10 +42,10 @@ spack -e experiment repo add mochi-spack-packages
 
 if [[ -n "$MOFKA_GITHUB_SHA" ]]; then
     echo "==> Adding mofka commit $MOFKA_GITHUB_SHA as main"
-    spack -e experiment add "mofka+python+mpi@git.$MOFKA_GITHUB_SHA=main" ^mochi-bedrock~ssg
+    spack -e experiment add "mofka+python+mpi+benchmark@git.$MOFKA_GITHUB_SHA=main" ^mochi-bedrock~ssg
 else
     echo "==> Adding mofka@main"
-    spack -e experiment add mofka@main+python+mpi ^mochi-bedrock~ssg
+    spack -e experiment add mofka@main+python+mpi+benchmark ^mochi-bedrock~ssg
 fi
 
 echo "==> Installing environment"
