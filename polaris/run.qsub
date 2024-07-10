@@ -8,6 +8,9 @@ source $SANDBOX/bin/activate.sh
 echo "==> Showing environment"
 export
 
+echo "==> Showing the content of the environment's bin directory"
+ls -l $SANDBOX/bin/
+
 echo "==> Generating example result file"
 mkdir results
 RESULT_FILENAME="$(date +'%Y-%m-%d-%H-%M-%S')-$(uuidgen).json"
