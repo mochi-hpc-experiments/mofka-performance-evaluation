@@ -9,7 +9,7 @@ echo "==> Showing environment"
 export
 
 echo "==> Showing the content of the environment's bin directory"
-ls -l $SANDBOX/bin/
+ls -l $SANDBOX/environments/experiment/bin
 
 echo "==> Generating example result file"
 mkdir results
