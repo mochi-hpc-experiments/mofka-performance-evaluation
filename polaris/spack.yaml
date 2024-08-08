@@ -42,6 +42,9 @@ spack:
     mochi-bedrock:
       require:
       - "~ssg"
+    mochi-flock:
+      require:
+      - "@0.4.1:"
     mpi:
       require:
       - cray-mpich

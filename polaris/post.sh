@@ -2,6 +2,8 @@
 
 SANDBOX=$CI_PROJECT_DIR/sandbox
 
+exit 0
+
 if [[ -z "$MOCHI_GH_POLARIS" ]]; then
     echo "==> ERROR: MOCHI_GH_POLARIS not defined"
     exit -1

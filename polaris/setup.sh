@@ -3,6 +3,10 @@ set -e
 
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 
+# prevent spack from messing with user's configs
+export SPACK_DISABLE_LOCAL_CONFIG=true
+export SPACK_USER_CACHE_PATH=/tmp/spack
+
 echo "==> Creating sandbox folder"
 mkdir sandbox
 SANDBOX=$(realpath sandbox)
@@ -42,10 +46,10 @@ spack -e experiment repo add mochi-spack-packages
 
 if [[ -n "$MOFKA_GITHUB_SHA" ]]; then
     echo "==> Adding mofka commit $MOFKA_GITHUB_SHA as main"
-    spack -e experiment add "mofka+python+mpi+benchmark@git.$MOFKA_GITHUB_SHA=main" ^mochi-bedrock~ssg
+    spack -e experiment add "mofka+python+mpi+benchmark@git.$MOFKA_GITHUB_SHA=main"
 else
     echo "==> Adding mofka@main"
-    spack -e experiment add mofka@main+python+mpi+benchmark ^mochi-bedrock~ssg
+    spack -e experiment add mofka@main+python+mpi+benchmark
 fi
 
 echo "==> Installing environment"
