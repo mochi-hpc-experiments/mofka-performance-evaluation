@@ -1,61 +1,71 @@
 #!/bin/bash
 
+EXP_ENV=exp-env
+COV_ENV=cov-env
+
 if [ -z ${CI_PROJECT_DIR+x} ]; then
     WORK_DIR=$(realpath $PBS_O_WORKDIR)
 else
     WORK_DIR=$(realpath $CI_PROJECT_DIR)
 fi
-echo "==> WORK_DIR is $WORK_DIR"
+
+source $WORK_DIR/util.sh
 
 SANDBOX=$WORK_DIR/sandbox
-
-echo "==> Sourcing spack environment"
-source $SANDBOX/bin/activate.sh
-
 RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d-%H-%M-%S')/$(uuidgen | cut -c1-8)"
+
+# file names for experiment without coverage
 BENCHMARK_CONFIG_FILE=$RESULT_DIR/benchmark.json
 BENCHMARK_RESULT_FILE=$RESULT_DIR/result.json
-BENCHMARK_RESULT_FILE_WITH_COVERAGE=$RESULT_DIR/coverage/result.json
 BENCHMARK_GROUP_FILE=$RESULT_DIR/flock.json
+# file names for experiment with coverage
+BENCHMARK_CONFIG_FILE_COV=$RESULT_DIR/coverage/benchmark.json
+BENCHMARK_RESULT_FILE_COV=$RESULT_DIR/coverage/result.json
+BENCHMARK_GROUP_FILE_COV=$RESULT_DIR/coverage/flock.json
+
 export GCOV_PREFIX=$RESULT_DIR/coverage
 
 echo "==> Creating result directory $RESULT_DIR"
 mkdir -p $RESULT_DIR
 mkdir -p $GCOV_PREFIX
 
-# FIXME create an activation script for that?
-export PATH=$PATH:$SANDBOX/mofka-coverage/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SANDBOX/mofka-coverage/lib
-PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2)
-export PYTHONPATH=$PYTHONPATH:$SANDBOX/mofka-coverage/lib/python${PYTHON_VERSION}/site-packages
-
 echo "==> Copy spack files"
-cp $SPACK_ENV/spack.lock $RESULT_DIR
-cp $SPACK_ENV/spack.yaml $RESULT_DIR
+cp $SANDBOX/environments/$EXP_ENV/spack.lock $RESULT_DIR
+cp $SANDBOX/environments/$EXP_ENV/spack.yaml $RESULT_DIR
 cp $SANDBOX/info.json $RESULT_DIR
-
-echo "==> Generating benchmark configuration"
-BENCHMARK_CONFIG_FILE=$RESULT_DIR/benchmark.json
-mofkactl benchmark generate -a cxi --num-servers 2 --num-events 1000 > $BENCHMARK_CONFIG_FILE
-
-echo "==> Changing name of group file in configuration"
-sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE#g" $BENCHMARK_CONFIG_FILE
-# FIXME: Temporary fix: replace any earliest_first pool
-sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE
 
 # ----------------------------------
 # Running benchmark without coverage
 # ----------------------------------
 
+echo "==> Sourcing $EXP_ENV environment"
+source $SANDBOX/bin/activate-$EXP_ENV.sh
+
+echo "==> Generating benchmark configuration"
+BENCHMARK_CONFIG_FILE=$RESULT_DIR/benchmark.json
+mofkactl benchmark generate -a cxi --num-servers 2 --num-events 1000 > $BENCHMARK_CONFIG_FILE
+cp $BENCHMARK_CONFIG_FILE $BENCHMARK_CONFIG_FILE_COV
+
+echo "==> Changing name of group file in configuration"
+sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE#g" $BENCHMARK_CONFIG_FILE
+sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE_COV#g" $BENCHMARK_CONFIG_FILE_COV
+
+# FIXME: Temporary fix: replace any earliest_first pool
+sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE
+sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE_COV
+
 echo "==> Running benchmark without coverage"
 mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE
 
-# ----------------------------------
+# -------------------------------
 # Running benchmark with coverage
-# ----------------------------------
+# -------------------------------
+
+echo "==> Sourcing $COV_ENV environment"
+source $SANDBOX/bin/activate-$COV_ENV.sh
 
 echo "==> Running benchmark with coverage"
-mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE_WITH_COVERAGE
+mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE_COV
 
 # ------------------------
 # Generate coverage report
@@ -69,7 +79,7 @@ COVERAGE_RESULT_PATH=$RESULT_DIR/coverage$SANDBOX/mofka-build-coverage
 GCOV_CMD=gcov-12
 
 echo "==> Copying .gcno files"
-rsync -av --ignore-existing $MOFKA_BUILD_PATH $COVERAGE_RESULT_PATH
+rsync -av --ignore-existing $MOFKA_BUILD_PATH $COVERAGE_RESULT_PATH 1> /dev/null 2>&1
 
 pushd $COVERAGE_RESULT_PATH
 echo "==> Generating coverage report (text)"
