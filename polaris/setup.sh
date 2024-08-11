@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-source util.sh
+HERE=`dirname $0`
+HERE=`realpath $HERE`
+
+source $HERE/util.sh
 
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 
