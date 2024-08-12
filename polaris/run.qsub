@@ -14,6 +14,10 @@ source $WORK_DIR/util.sh
 SANDBOX=$WORK_DIR/sandbox
 RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d-%H-%M-%S')/$(uuidgen | cut -c1-8)"
 
+# profiling
+export MARGO_ENABLE_MONITORING=1
+export MARGO_MONITORING_FILENAME_PREFIX=$RESULT_DIR/mofka
+
 # file names for experiment without coverage
 BENCHMARK_CONFIG_FILE=$RESULT_DIR/benchmark.json
 BENCHMARK_RESULT_FILE=$RESULT_DIR/result.json
@@ -57,12 +61,22 @@ sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE_COV
 echo "==> Running benchmark without coverage"
 mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE
 
+# json-c 0.13.0 has a bug that incorrectly prints 0 as 0.000000000.0
+for file in "$MARGO_MONITORING_FILENAME_PREFIX".*.json; do
+    if [[ -f "$file" ]]; then
+        sed -i "s/\.000000000\.0/.0/g" $file
+    fi
+done
+
 # -------------------------------
 # Running benchmark with coverage
 # -------------------------------
 
 echo "==> Sourcing $COV_ENV environment"
 source $SANDBOX/bin/activate-$COV_ENV.sh
+
+unset MARGO_ENABLE_MONITORING
+unset MARGO_MONITORING_FILENAME_PREFIX
 
 echo "==> Running benchmark with coverage"
 mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE_COV
