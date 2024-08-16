@@ -1,35 +1,44 @@
 #!/bin/bash
 
+source $CI_PROJECT_DIR/util.sh
 SANDBOX=$CI_PROJECT_DIR/sandbox
-
-exit 0
 
 if [[ -z "$MOCHI_GH_POLARIS" ]]; then
     echo "==> ERROR: MOCHI_GH_POLARIS not defined"
     exit -1
 fi
 
-RESULT_FILE=$(find $CI_PROJECT_DIR/results -type f -name "*.json")
-if [[ -z "$RESULT_FILE" ]]; then
-    echo "==> ERROR: Could not locate any result file"
+RESULTS_DIR=$CI_PROJECT_DIR/results
+if [ -z "$(ls -A $RESULTS_DIR)" ]; then
+    echo "==> No results to commit"
     exit -1
 fi
-RESULT_FILE_NAME=$(basename $RESULT_FILE)
 
 echo "==> Cloning mofka-performance-evaluation"
 git clone https://github.com/mochi-hpc-experiments/mofka-performance-evaluation.git
-cd mofka-performance-evaluation
-mkdir -p polaris/results
+pushd mofka-performance-evaluation
 
 echo "==> Changing branch"
 git checkout results/polaris
 
-echo "==> Copying result file $RESULT_FILE_NAME"
-cp $RESULT_FILE polaris/results
+mkdir -p polaris/results
+pushd polaris/results
+
+num_files=0
+for DIR in $RESULTS_DIR/*; do
+    if [ -d "$DIR" ]; then
+        ARCHIVE="$(basename $DIR).tar.gz"
+        echo "Processing directory: $DIR => $ARCHIVE"
+        tar czf $ARCHIVE $DIR
+        git add $ARCHIVE
+        num_files=$((num_files+1))
+    fi
+done
+
+popd # polaris/results
 
 echo "==> Creating commit"
-git add polaris/results/$RESULT_FILE_NAME
-git commit -m "Added file $RESULT_FILE_NAME"
+git commit -m "Added new ${num_files} new files on $(date)"
 
 echo "==> Changing repository URL"
 git remote set-url origin "https://$MOCHI_GH_POLARIS@github.com/mochi-hpc-experiments/mofka-performance-evaluation.git"
