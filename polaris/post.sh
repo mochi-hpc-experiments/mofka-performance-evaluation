@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source $CI_PROJECT_DIR/util.sh
 SANDBOX=$CI_PROJECT_DIR/sandbox
+source $SANDBOX/bin/util.sh
 
 if [[ -z "$MOCHI_GH_POLARIS" ]]; then
     echo "==> ERROR: MOCHI_GH_POLARIS not defined"
@@ -29,6 +29,8 @@ for DIR in $RESULTS_DIR/*; do
     if [ -d "$DIR" ]; then
         ARCHIVE="$(basename $DIR).tar.gz"
         echo "Processing directory: $DIR => $ARCHIVE"
+        mv $DIR .
+        DIR=$(basename $DIR)
         tar czf $ARCHIVE $DIR
         git add $ARCHIVE
         num_files=$((num_files+1))
