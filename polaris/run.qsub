@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+ulimit -c unlimited
 EXP_ENV=exp-env
 COV_ENV=cov-env
 
@@ -95,7 +96,7 @@ COVERAGE_RESULT_PATH=$RESULT_DIR/coverage$SANDBOX/mofka-build-coverage
 GCOV_CMD=gcov-12
 
 echo "==> Copying .gcno files"
-rsync -av --ignore-existing $MOFKA_BUILD_PATH $COVERAGE_RESULT_PATH 1> /dev/null 2>&1
+rsync -av --ignore-existing $MOFKA_BUILD_PATH $COVERAGE_RESULT_PATH
 
 pushd $COVERAGE_RESULT_PATH
 echo "==> Generating coverage report (text)"
