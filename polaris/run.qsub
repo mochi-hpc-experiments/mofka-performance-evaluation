@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 EXP_ENV=exp-env
 COV_ENV=cov-env
@@ -9,9 +10,10 @@ else
     WORK_DIR=$(realpath $CI_PROJECT_DIR)
 fi
 
-source $WORK_DIR/util.sh
 
 SANDBOX=$WORK_DIR/sandbox
+source $SANDBOX/bin/util.sh
+
 RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d-%H-%M-%S')/$(uuidgen | cut -c1-8)"
 
 # profiling
