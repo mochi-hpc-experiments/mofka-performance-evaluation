@@ -96,6 +96,9 @@ COVERAGE_RESULT_PATH=$RESULT_DIR/coverage$SANDBOX/mofka-build-coverage
 GCOV_CMD=gcov-12
 
 echo "==> Copying .gcno files"
+mkdir -p $COVERAGE_RESULT_PATH
+echo "MOFKA_BUILD_PATH=$MOFKA_BUILD_PATH"
+echo "COVERAGE_RESULT_PATH=$COVERAGE_RESULT_PATH"
 rsync -av --ignore-existing $MOFKA_BUILD_PATH $COVERAGE_RESULT_PATH
 
 pushd $COVERAGE_RESULT_PATH
