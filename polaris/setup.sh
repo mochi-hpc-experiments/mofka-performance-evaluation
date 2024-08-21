@@ -3,8 +3,13 @@ set -e
 
 HERE=`dirname $0`
 HERE=`realpath $HERE`
-
 source $HERE/util.sh
+
+# CI genenerally runs from a temporary directory
+# Here we move to a directory in the user's home
+WORK_DIR="$HOME/mofka-polaris-pipelines/$(uuidgen | cut -c1-8)"
+echo $WORK_DIR > work_dir.txt
+mkdir -p $WORK_DIR
 
 module swap PrgEnv-nvhpc PrgEnv-gnu || true
 
@@ -16,8 +21,8 @@ export SPACK_DISABLE_LOCAL_CONFIG=true
 export SPACK_USER_CACHE_PATH=/tmp/spack
 
 echo "==> Creating sandbox folder"
-mkdir sandbox
-SANDBOX=$(realpath sandbox)
+SANDBOX=$WORK_DIR/sandbox
+mkdir $SANDBOX
 ORIGIN=$(dirname "$0")
 
 echo "==> Copying qsub script in sandbox folder"
@@ -56,7 +61,7 @@ else
     popd
     echo "==> MOFKA_GITHUB_SHA not set, found $MOFKA_GITHUB_SHA"
 fi
-popd
+popd # $SANDBOX
 
 echo "==> Sourcing setup-env.sh"
 source spack/share/spack/setup-env.sh
@@ -109,6 +114,18 @@ echo "==> Creating activate scripts"
 spack env activate --sh $EXP_ENV > $SANDBOX/bin/activate-exp-env.sh
 spack env activate --sh $COV_ENV > $SANDBOX/bin/activate-cov-env.sh
 
+echo "==> Writing info file"
+cat << EOF > $SANDBOX/info.json
+{
+    "mochi-spack-package": "${MOCHI_SPACK_PACKAGES_HASH}",
+    "spack": "${SPACK_LATEST}",
+    "mofka": "${MOFKA_GITHUB_SHA}"
+}
+EOF
+
+# The cleanup hereafter is not really necessary since we aren't
+# using artifacts, it's just to make space in the user's home.
+
 echo "==> Cleaning up release build"
 rm -rf $SANDBOX/mofka-build-release
 
@@ -125,13 +142,8 @@ find "$SANDBOX/environments" -type d -name ".spack-db" -exec rm -rf {} +
 find "$SANDBOX/environments" -type d -name "share" -exec rm -rf {} +
 find "$SANDBOX/environments" -type d -name "__pycache__" -exec rm -rf {} +
 
-echo "==> Writing info file"
-cat << EOF > $SANDBOX/info.json
-{
-    "mochi-spack-package": "${MOCHI_SPACK_PACKAGES_HASH}",
-    "spack": "${SPACK_LATEST}",
-    "mofka": "${MOFKA_GITHUB_SHA}"
-}
-EOF
+echo "==> Cleaning up spack and mochi-spack-packages"
+rm -rf spack
+rm -rf mochi-spack-packages
 
 echo "==> Setup completed!"

@@ -5,21 +5,18 @@ ulimit -c unlimited
 EXP_ENV=exp-env
 COV_ENV=cov-env
 
-if [ -z ${CI_PROJECT_DIR+x} ]; then
-    WORK_DIR=$(realpath $PBS_O_WORKDIR)
-else
-    WORK_DIR=$(realpath $CI_PROJECT_DIR)
-fi
-
+# work_dir.txt is the only artifact of the setup step
+WORK_DIR=$(car work_dir.txt)
 
 SANDBOX=$WORK_DIR/sandbox
 source $SANDBOX/bin/util.sh
 
-RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d-%H-%M-%S')/$(uuidgen | cut -c1-8)"
+RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d')/$(uuidgen | cut -c1-8)"
 
 # profiling
 export MARGO_ENABLE_MONITORING=1
 export MARGO_MONITORING_FILENAME_PREFIX=$RESULT_DIR/mofka
+export MARGO_MONITORING_DISABLE_TIME_SERIES=true
 
 # file names for experiment without coverage
 BENCHMARK_CONFIG_FILE=$RESULT_DIR/benchmark.json
@@ -58,8 +55,8 @@ sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE#g" $BENCHMARK_CONFIG_FILE
 sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE_COV#g" $BENCHMARK_CONFIG_FILE_COV
 
 # FIXME: Temporary fix: replace any earliest_first pool
-sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE
-sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE_COV
+#sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE
+#sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE_COV
 
 echo "==> Running benchmark without coverage"
 mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE
