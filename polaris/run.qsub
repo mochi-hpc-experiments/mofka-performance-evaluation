@@ -9,6 +9,7 @@ EXP_ENV=exp-env
 COV_ENV=cov-env
 
 WORK_DIR=$(cat work_dir.txt)
+SANDBOX=$WORK_DIR/sandbox
 
 RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d')/$(uuidgen | cut -c1-8)"
 
