@@ -22,14 +22,8 @@ export SPACK_USER_CACHE_PATH=/tmp/spack
 
 echo "==> Creating sandbox folder"
 SANDBOX=$WORK_DIR/sandbox
-mkdir $SANDBOX
+mkdir -p $SANDBOX/bin
 ORIGIN=$(dirname "$0")
-
-echo "==> Copying qsub script in sandbox folder"
-mkdir $SANDBOX/bin
-cp $ORIGIN/run.qsub $SANDBOX/bin
-cp $ORIGIN/post.sh $SANDBOX/bin
-cp $ORIGIN/util.sh $SANDBOX/bin
 
 echo "==> Downloading spack"
 git clone -q https://github.com/spack/spack.git

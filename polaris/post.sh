@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# work_dir.txt is the only artifact of the setup step
+HERE=`dirname $0`
+HERE=`realpath $HERE`
+source $HERE/util.sh
+
 WORK_DIR=$(car work_dir.txt)
 
 if [ -z "${WORK_DIR}" ]; then
@@ -8,9 +11,6 @@ if [ -z "${WORK_DIR}" ]; then
     exit -1
 fi
 echo "== WORK_DIR is $WORK_DIR"
-
-SANDBOX=$WORK_DIR/sandbox
-source $SANDBOX/bin/util.sh
 
 if [[ -z "$MOCHI_GH_POLARIS" ]]; then
     echo "==> ERROR: MOCHI_GH_POLARIS not defined"
