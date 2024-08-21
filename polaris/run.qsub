@@ -8,7 +8,7 @@ source $HERE/util.sh
 EXP_ENV=exp-env
 COV_ENV=cov-env
 
-WORK_DIR=$(car work_dir.txt)
+WORK_DIR=$(cat work_dir.txt)
 
 RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d')/$(uuidgen | cut -c1-8)"
 

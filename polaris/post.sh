@@ -4,7 +4,7 @@ HERE=`dirname $0`
 HERE=`realpath $HERE`
 source $HERE/util.sh
 
-WORK_DIR=$(car work_dir.txt)
+WORK_DIR=$(cat work_dir.txt)
 
 if [ -z "${WORK_DIR}" ]; then
     echo "==> ERROR: Could not find WORK_DIR"
