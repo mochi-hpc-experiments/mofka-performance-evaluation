@@ -55,8 +55,8 @@ sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE#g" $BENCHMARK_CONFIG_FILE
 sed -i "s#mofka\.flock\.json#$BENCHMARK_GROUP_FILE_COV#g" $BENCHMARK_CONFIG_FILE_COV
 
 # FIXME: Temporary fix: replace any earliest_first pool
-#sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE
-#sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE_COV
+sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE
+sed -i "s#earliest_first#fifo_wait#g" $BENCHMARK_CONFIG_FILE_COV
 
 echo "==> Running benchmark without coverage"
 mpiexec -n 4 --ppn 1 --cpu-bind none mofka-benchmark $BENCHMARK_CONFIG_FILE $BENCHMARK_RESULT_FILE
