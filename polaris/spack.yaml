@@ -41,7 +41,8 @@ spack:
       - "target=zen3"
     mochi-bedrock:
       require:
-      - "~ssg"
+      - "@0.15.0:"
+      - "+space"
     mochi-flock:
       require:
       - "@0.4.1:"
