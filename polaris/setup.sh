@@ -84,11 +84,11 @@ spack -e $COV_ENV add \
     "mofka+python+mpi+benchmark@main cflags='--coverage -O0 -g' cxxflags='--coverage -O0 -g' ldflags='--coverage'"
 spack -e $COV_ENV add "py-gcovr@7.2"
 
-echo "==> Installing $EXP_ENV environment"
-spack -e $EXP_ENV install
-
 echo "==> Installing $COV_ENV environment"
 spack -e $COV_ENV install
+
+echo "==> Installing $EXP_ENV environment"
+spack -e $EXP_ENV install
 
 if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     echo "==> Pushing packages to build cache"
