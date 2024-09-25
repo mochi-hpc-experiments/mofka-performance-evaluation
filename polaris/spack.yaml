@@ -3,7 +3,12 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
-  view: true
+  view:
+    default:
+    root: .spack-env/view
+    projections:
+      gcc-runtime: '{hash}'
+      all: ''
   modules:
     prefix_inspections:
       lib: [LD_LIBRARY_PATH]
