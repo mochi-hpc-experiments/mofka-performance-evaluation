@@ -5,10 +5,10 @@
 spack:
   view:
     default:
-    root: .spack-env/view
-    projections:
-      gcc-runtime: '{hash}'
-      all: ''
+      root: .spack-env/view
+      projections:
+        gcc-runtime: '{hash}'
+        all: ''
   modules:
     prefix_inspections:
       lib: [LD_LIBRARY_PATH]
