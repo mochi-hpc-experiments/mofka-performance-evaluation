@@ -84,17 +84,8 @@ spack -e $COV_ENV add \
     "mofka+python+mpi+benchmark@main cflags='--coverage -O0 -g' cxxflags='--coverage -O0 -g' ldflags='--coverage'"
 spack -e $COV_ENV add "py-gcovr@7.2"
 
-echo "==> Installing $EXP_ENV environment"
-spack -e $EXP_ENV env depfile -o Makefile
-make -j 32
-rm Makefile
-#spack -e $EXP_ENV install
-
 echo "==> Installing $COV_ENV environment"
-#spack -e $COV_ENV install
-spack -e $COV_ENV env depfile -o Makefile
-make -j 32
-rm Makefile
+spack -e $COV_ENV install
 
 echo "==> Installing $EXP_ENV environment"
 spack -e $EXP_ENV install
