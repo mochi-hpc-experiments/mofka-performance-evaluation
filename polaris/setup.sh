@@ -85,10 +85,16 @@ spack -e $COV_ENV add \
 spack -e $COV_ENV add "py-gcovr@7.2"
 
 echo "==> Installing $EXP_ENV environment"
-spack -e $EXP_ENV install
+spack -e $EXP_ENV env depfile -o Makefile
+make -j 32
+rm Makefile
+#spack -e $EXP_ENV install
 
 echo "==> Installing $COV_ENV environment"
-spack -e $COV_ENV install
+#spack -e $COV_ENV install
+spack -e $COV_ENV env depfile -o Makefile
+make -j 32
+rm Makefile
 
 if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     echo "==> Pushing packages to build cache"
