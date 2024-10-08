@@ -96,6 +96,9 @@ spack -e $COV_ENV env depfile -o Makefile
 make -j 32
 rm Makefile
 
+echo "==> Installing $EXP_ENV environment"
+spack -e $EXP_ENV install
+
 if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
     echo "==> Pushing packages to build cache"
     spack -e $EXP_ENV mirror set --push \
