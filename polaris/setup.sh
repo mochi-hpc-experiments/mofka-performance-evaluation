@@ -41,6 +41,11 @@ pushd mochi-spack-packages
 MOCHI_SPACK_PACKAGES_HASH=$(git rev-parse HEAD)
 popd
 
+echo "==> Cloning platform configurations"
+git clone -q --depth 1 https://github.com/mochi-hpc-experiments/platform-configurations.git
+echo "==> Copying spack.yaml file"
+cp platform-configurations/ANL/Polaris/spack.yaml .
+
 echo "==> Cloning mofka repository"
 pushd $SANDBOX
 git clone -q --depth 1 https://github.com/mochi-hpc/mofka.git
@@ -62,12 +67,12 @@ source spack/share/spack/setup-env.sh
 spack config add config:environments_root:$SANDBOX/environments
 
 echo "==> Creating $EXP_ENV environment"
-spack env create $EXP_ENV $ORIGIN/spack.yaml
+spack env create $EXP_ENV spack.yaml
 spack -e $EXP_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $EXP_ENV repo add mochi-spack-packages
 
 echo "==> Creating $COV_ENV environment"
-spack env create $COV_ENV $ORIGIN/spack.yaml
+spack env create $COV_ENV spack.yaml
 spack -e $COV_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $COV_ENV repo add mochi-spack-packages
 
