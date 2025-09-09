@@ -30,7 +30,12 @@ git clone -q https://github.com/spack/spack.git
 
 echo "==> Finding latest release"
 pushd spack
-SPACK_LATEST=$(git tag | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -t . -k 1,1n -k 2,2n -k 3,3n | tail -n 1)
+SPACK_LATEST=$(git tag \
+              | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+              | sed 's/^v//' \
+              | sort -t . -k 1,1n -k 2,2n -k 3,3n \
+              | tail -n 1)
+SPACK_LATEST="v${SPACK_LATEST}"
 echo "==> Checking out latest release ${SPACK_LATEST}"
 git checkout -q $SPACK_LATEST
 popd
