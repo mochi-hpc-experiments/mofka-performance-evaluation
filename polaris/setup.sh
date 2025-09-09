@@ -81,7 +81,7 @@ spack -e $EXP_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $EXP_ENV repo add mochi-spack-packages
 spack -e $EXP_ENV mirror rm mochi-buildcache
 spack -e $EXP_ENV mirror add --autopush polaris-buildcache ${BUILD_CACHE_PATH}
-spack -e $EXP_ENV buildcache update-index ${BUILD_CACHE_PATH}
+#spack -e $EXP_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 echo "==> Creating $COV_ENV environment"
 spack env create $COV_ENV spack.yaml
@@ -89,7 +89,7 @@ spack -e $COV_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $COV_ENV repo add mochi-spack-packages
 spack -e $COV_ENV mirror rm mochi-buildcache
 spack -e $COV_ENV mirror add --autopush polaris-buildcache ${BUILD_CACHE_PATH}
-spack -e $COV_ENV buildcache update-index ${BUILD_CACHE_PATH}
+#spack -e $COV_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 echo "==> Adding specs to $EXP_ENV environment"
 spack -e $EXP_ENV develop -p $SANDBOX/mofka -b $SANDBOX/mofka-build-release --no-clone \
