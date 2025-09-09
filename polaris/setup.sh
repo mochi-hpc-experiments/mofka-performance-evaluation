@@ -78,15 +78,15 @@ spack -e $COV_ENV repo add mochi-spack-packages
 
 echo "==> Adding specs to $EXP_ENV environment"
 spack -e $EXP_ENV develop -p $SANDBOX/mofka -b $SANDBOX/mofka-build-release --no-clone \
-    "mofka+python+mpi+benchmark@main"
+    "mofka+python@main"
 spack -e $EXP_ENV add \
-    "mofka+python+mpi+benchmark@main"
+    "mofka+python@main"
 
 echo "==> Adding specs to $COV_ENV environment"
 spack -e $COV_ENV develop -p $SANDBOX/mofka -b $SANDBOX/mofka-build-coverage --no-clone \
-    "mofka+python+mpi+benchmark@main cflags='--coverage -O0 -g' cxxflags='--coverage -O0 -g' ldflags='--coverage'"
+    "mofka+python@main cflags='--coverage -O0 -g' cxxflags='--coverage -O0 -g' ldflags='--coverage'"
 spack -e $COV_ENV add \
-    "mofka+python+mpi+benchmark@main cflags='--coverage -O0 -g' cxxflags='--coverage -O0 -g' ldflags='--coverage'"
+    "mofka+python@main cflags='--coverage -O0 -g' cxxflags='--coverage -O0 -g' ldflags='--coverage'"
 spack -e $COV_ENV add "py-gcovr@7.2"
 
 echo "==> Installing $COV_ENV environment"
