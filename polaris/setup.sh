@@ -70,11 +70,15 @@ echo "==> Creating $EXP_ENV environment"
 spack env create $EXP_ENV spack.yaml
 spack -e $EXP_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $EXP_ENV repo add mochi-spack-packages
+spack -e $EXP_ENV mirror rm mochi-buildcache
+spack -e $EXP_ENV spack mirror add --autopush polaris-buildcache /eagle/radix-io/polaris-spack-build-cache
 
 echo "==> Creating $COV_ENV environment"
 spack env create $COV_ENV spack.yaml
 spack -e $COV_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $COV_ENV repo add mochi-spack-packages
+spack -e $COV_ENV mirror rm mochi-buildcache
+spack -e $COV_ENV spack mirror add --autopush polaris-buildcache /eagle/radix-io/polaris-spack-build-cache
 
 echo "==> Adding specs to $EXP_ENV environment"
 spack -e $EXP_ENV develop -p $SANDBOX/mofka -b $SANDBOX/mofka-build-release --no-clone \
@@ -95,19 +99,19 @@ spack -e $COV_ENV install
 echo "==> Installing $EXP_ENV environment"
 spack -e $EXP_ENV install
 
-if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
-    echo "==> Pushing packages to build cache"
-    spack -e $EXP_ENV mirror set --push \
-         --oci-username mdorier \
-         --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
-    spack -e $EXP_ENV buildcache push --base-image ubuntu:22.04 \
-          --unsigned --update-index --only dependencies mochi-buildcache
-    spack -e $COV_ENV mirror set --push \
-         --oci-username mdorier \
-         --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
-    spack -e $COV_ENV buildcache push --base-image ubuntu:22.04 \
-          --unsigned --update-index --only dependencies mochi-buildcache
-fi
+#if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
+#    echo "==> Pushing packages to build cache"
+#    spack -e $EXP_ENV mirror set --push \
+#         --oci-username mdorier \
+#         --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
+#    spack -e $EXP_ENV buildcache push --base-image ubuntu:22.04 \
+#          --unsigned --update-index --only dependencies mochi-buildcache
+#    spack -e $COV_ENV mirror set --push \
+#         --oci-username mdorier \
+#         --oci-password $MOCHI_BUILDCACHE_TOKEN mochi-buildcache
+#    spack -e $COV_ENV buildcache push --base-image ubuntu:22.04 \
+#          --unsigned --update-index --only dependencies mochi-buildcache
+#fi
 
 echo "==> Creating activate scripts"
 spack env activate --sh $EXP_ENV > $SANDBOX/bin/activate-exp-env.sh
