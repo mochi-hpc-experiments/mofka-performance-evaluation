@@ -64,6 +64,7 @@ popd # $SANDBOX
 
 echo "==> Sourcing setup-env.sh"
 source spack/share/spack/setup-env.sh
+spack gpg init
 spack config add config:environments_root:$SANDBOX/environments
 
 echo "==> Creating $EXP_ENV environment"
