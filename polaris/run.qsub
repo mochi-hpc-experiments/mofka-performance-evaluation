@@ -1,8 +1,13 @@
 #!/bin/bash
 set -e
 
-HERE=`dirname $0`
-HERE=`realpath $HERE`
+if [[ -n "$PBS_O_WORKDIR" ]]; then
+    HERE=$PBS_O_WORKDIR
+    cd $PBS_O_WORKDIR
+else
+    HERE=`dirname $0`
+    HERE=`realpath $HERE`
+fi
 source $HERE/util.sh
 
 EXP_ENV=exp-env

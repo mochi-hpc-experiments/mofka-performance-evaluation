@@ -66,19 +66,25 @@ echo "==> Sourcing setup-env.sh"
 source spack/share/spack/setup-env.sh
 spack config add config:environments_root:$SANDBOX/environments
 
+BUILD_CACHE_PATH=/eagle/radix-io/polaris-spack-build-cache
+
+echo "==> Updating cache index"
+
 echo "==> Creating $EXP_ENV environment"
 spack env create $EXP_ENV spack.yaml
 spack -e $EXP_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $EXP_ENV repo add mochi-spack-packages
 spack -e $EXP_ENV mirror rm mochi-buildcache
-spack -e $EXP_ENV mirror add --unsigned --autopush polaris-buildcache /eagle/radix-io/polaris-spack-build-cache
+spack -e $EXP_ENV spack mirror add --autopush polaris-buildcache ${BUILD_CACHE_PATH}
+spack -e $EXP_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 echo "==> Creating $COV_ENV environment"
 spack env create $COV_ENV spack.yaml
 spack -e $COV_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $COV_ENV repo add mochi-spack-packages
 spack -e $COV_ENV mirror rm mochi-buildcache
-spack -e $COV_ENV mirror add --unsigned --autopush polaris-buildcache /eagle/radix-io/polaris-spack-build-cache
+spack -e $COV_ENV spack mirror add --autopush polaris-buildcache ${BUILD_CACHE_PATH}
+spack -e $COV_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 echo "==> Adding specs to $EXP_ENV environment"
 spack -e $EXP_ENV develop -p $SANDBOX/mofka -b $SANDBOX/mofka-build-release --no-clone \
@@ -95,9 +101,11 @@ spack -e $COV_ENV add "py-gcovr@7.2"
 
 echo "==> Installing $COV_ENV environment"
 spack -e $COV_ENV install
+spack -e $COV_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 echo "==> Installing $EXP_ENV environment"
 spack -e $EXP_ENV install
+spack -e $EXP_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 #if [[ -n "$MOCHI_BUILDCACHE_TOKEN" ]]; then
 #    echo "==> Pushing packages to build cache"
