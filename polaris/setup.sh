@@ -11,7 +11,7 @@ WORK_DIR="$HOME/mofka-polaris-pipelines/$(uuidgen | cut -c1-8)"
 echo $WORK_DIR > work_dir.txt
 mkdir -p $WORK_DIR
 
-module swap PrgEnv-nvhpc PrgEnv-gnu || true
+module load PrgEnv-gnu || true
 
 EXP_ENV=exp-env
 COV_ENV=cov-env
@@ -46,10 +46,10 @@ pushd mochi-spack-packages
 MOCHI_SPACK_PACKAGES_HASH=$(git rev-parse HEAD)
 popd
 
-echo "==> Cloning platform configurations"
-git clone -q --depth 1 https://github.com/mochi-hpc-experiments/platform-configurations.git
-echo "==> Copying spack.yaml file"
-cp platform-configurations/ANL/Polaris/spack.yaml .
+#echo "==> Cloning platform configurations"
+#git clone -q --depth 1 https://github.com/mochi-hpc-experiments/platform-configurations.git
+#echo "==> Copying spack.yaml file"
+#cp platform-configurations/ANL/Polaris/spack.yaml .
 
 echo "==> Cloning mofka repository"
 pushd $SANDBOX
@@ -79,16 +79,16 @@ echo "==> Creating $EXP_ENV environment"
 spack env create $EXP_ENV spack.yaml
 spack -e $EXP_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $EXP_ENV repo add mochi-spack-packages
-spack -e $EXP_ENV mirror rm mochi-buildcache
-spack -e $EXP_ENV mirror add --autopush polaris-buildcache ${BUILD_CACHE_PATH}
+#spack -e $EXP_ENV mirror rm mochi-buildcache
+spack -e $EXP_ENV mirror add --unsigned --autopush polaris-buildcache ${BUILD_CACHE_PATH}
 #spack -e $EXP_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
-echo "==> Creating $COV_ENV environment"
+#echo "==> Creating $COV_ENV environment"
 spack env create $COV_ENV spack.yaml
 spack -e $COV_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $COV_ENV repo add mochi-spack-packages
-spack -e $COV_ENV mirror rm mochi-buildcache
-spack -e $COV_ENV mirror add --autopush polaris-buildcache ${BUILD_CACHE_PATH}
+#spack -e $COV_ENV mirror rm mochi-buildcache
+spack -e $COV_ENV mirror add --unsigned --autopush polaris-buildcache ${BUILD_CACHE_PATH}
 #spack -e $COV_ENV buildcache update-index ${BUILD_CACHE_PATH}
 
 echo "==> Adding specs to $EXP_ENV environment"
