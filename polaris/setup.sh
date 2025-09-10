@@ -76,6 +76,7 @@ BUILD_CACHE_PATH=/eagle/radix-io/polaris-spack-build-cache
 echo "==> Updating cache index"
 
 echo "==> Creating $EXP_ENV environment"
+ls -l
 spack env create $EXP_ENV spack.yaml
 spack -e $EXP_ENV config add config:install_tree:root:$SANDBOX/
 spack -e $EXP_ENV repo add mochi-spack-packages
