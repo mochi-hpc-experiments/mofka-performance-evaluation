@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+ls -R
+
 if [[ -n "$PBS_O_WORKDIR" ]]; then
     HERE=`pwd`
 else
