@@ -2,12 +2,13 @@
 set -e
 
 if [[ -n "$PBS_O_WORKDIR" ]]; then
-    HERE="${PBS_O_WORKDIR}/../mofka-performance-evaluation/polaris"
+    HERE=$PBS_O_WORKDIR
     cd $PBS_O_WORKDIR
 else
     HERE=`dirname $0`
     HERE=`realpath $HERE`
 fi
+echo `dirname $0`
 source $HERE/util.sh
 
 EXP_ENV=exp-env
