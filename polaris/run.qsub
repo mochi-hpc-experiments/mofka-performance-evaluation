@@ -8,6 +8,8 @@ else
     HERE=`dirname $0`
     HERE=`realpath $HERE`
 fi
+pwd
+ls -l $HERE
 source $HERE/util.sh
 
 EXP_ENV=exp-env
