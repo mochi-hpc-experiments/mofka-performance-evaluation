@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-ls -R
-
 if [[ -n "$PBS_O_WORKDIR" ]]; then
-    HERE=`pwd`
+    HERE=`pwd`/mofka-performance-evaluation/polaris
+    cd $HERE
 else
     HERE=`dirname $0`
     HERE=`realpath $HERE`
