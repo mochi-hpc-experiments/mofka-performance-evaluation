@@ -4,8 +4,7 @@
 # configuration settings.
 spack:
   # add package specs to the `specs` list
-  specs:
-  - mochi-margo
+  specs: []
   view:
     default:
       root: .spack-env/view
@@ -15,36 +14,17 @@ spack:
     prefix_inspections:
       lib: [LD_LIBRARY_PATH]
       lib64: [LD_LIBRARY_PATH]
-#  config:
-#    install_tree:
-#      padded_length: 128
   packages:
     gcc:
       externals:
       - spec: gcc@14.2.0 languages:='c,c++,fortran'
-        prefix: /opt/cray/pe/craype/2.7.34
+        prefix: /opt/cray/pe/gcc-native/14
         target: any
-        modules:
-          - PrgEnv-gnu
-          - gcc-native/14.2
-          - libfabric
         extra_attributes:
           compilers:
-            c: /opt/cray/pe/craype/2.7.34/bin/cc
-            cxx: /opt/cray/pe/craype/2.7.34/bin/CC
-            fortran: /opt/cray/pe/craype/2.7.34/bin/ftn
-#    all:
-#      require:
-#      - "%gcc@14.2.0"
-#    c:
-#      require:
-#        - gcc@14.2.0
-#    cxx:
-#      require:
-#        - gcc@14.2.0
-#    fortran:
-#      require:
-#        - gcc@14.2.0
+            c: /opt/cray/pe/gcc-native/14/bin/gcc
+            cxx: /opt/cray/pe/gcc-native/14/bin/g++
+            fortran: /opt/cray/pe/gcc-native/14/bin/gfortran
     mpi:
       require:
       - cray-mpich
@@ -82,11 +62,6 @@ spack:
       externals:
       - spec: gmake@4.2.1
         prefix: /usr
-#    cmake:
-#      buildable: false
-#      externals:
-#      - spec: cmake@3.30.5
-#        prefix: /soft/spack/pe/0.10.0/base/install/linux-sles15-x86_64/gcc-13.3.1/cmake-3.30.5-x6hbone32yqfjegmlb2zrf4xa6xbfx3y
     libtool:
       buildable: false
       externals:
