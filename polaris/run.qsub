@@ -2,14 +2,12 @@
 set -e
 
 if [[ -n "$PBS_O_WORKDIR" ]]; then
-    HERE=$PBS_O_WORKDIR
+    HERE="${PBS_O_WORKDIR}/.."
     cd $PBS_O_WORKDIR
 else
     HERE=`dirname $0`
     HERE=`realpath $HERE`
 fi
-pwd
-ls -l $HERE
 source $HERE/util.sh
 
 EXP_ENV=exp-env
