@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+WORK_DIR=$(cat work_dir.txt)
+SANDBOX=$WORK_DIR/sandbox
+
 if [[ -n "$PBS_O_WORKDIR" ]]; then
     HERE=`pwd`/mofka-performance-evaluation/polaris
     cd $HERE
@@ -12,9 +15,6 @@ source $HERE/util.sh
 
 EXP_ENV=exp-env
 COV_ENV=cov-env
-
-WORK_DIR=$(cat work_dir.txt)
-SANDBOX=$WORK_DIR/sandbox
 
 RESULT_DIR="$WORK_DIR/results/$(date +'%Y-%m-%d')/$(uuidgen | cut -c1-8)"
 
